@@ -16,10 +16,10 @@ public class FireCannon : MonoBehaviour
     private bool fire_Cannon = false;
 
     // Start is called before the first frame update
-    void Start()
+    /*void Start()
     {
         
-    }
+    }*/
 
     // Update is called once per frame
     public void Update()
@@ -29,15 +29,16 @@ public class FireCannon : MonoBehaviour
         transform.Rotate(0, rotateCannon, 0); // as said above using the rotate method to transform the whole cannon with x, y and z values
 
         //moving the cannon up and down
-        barrel.Rotate(Input.mouseScrollDelta.y * scrollIncrements, 0, 0); // x, y, z
+        barrel.Rotate(Input.mouseScrollDelta.y * scrollIncrements, 0, 0); // x, y, z*/
 
         //Firing the cannonball
-        if (Input.GetButtonDown("Fire1"))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             FireCannonball();
         }*/
 
     }
+
 
     public void FireCannonball()
     {
@@ -46,7 +47,7 @@ public class FireCannon : MonoBehaviour
         // using instantiate method it will take three things, the object and rotation
         GameObject ball = Instantiate(cannonball, pof.position, Quaternion.identity);
 
-        Rigidbody rb = ball.AddComponent<Rigidbody>(); // creates a rigidbody gor the cannonball
+        Rigidbody rb = ball.AddComponent<Rigidbody>(); // creates a rigidbody for the cannonball
         rb.velocity = cannonballSpeed * pof.forward; // creates a velocity for the cannon ball of any values we want in it
 
         fire_Cannon = false;
