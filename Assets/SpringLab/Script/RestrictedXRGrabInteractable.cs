@@ -3,38 +3,38 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class RestrictedXRGrabInteractable : XRGrabInteractable
 {
-    private Vector3 initialPosition;
-    private Quaternion initialRotation;
-    private Transform interactorTransform;
+    private Vector3 initialBoxPosition; // The initial position of the box when grabbed
+    private Vector3 initialGrabOffset; // The initial offset between the grab point and the box's position
+    private Transform interactorTransform; // The transform of the interactor (e.g., the ray interactor)
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
 
-        // Store the initial position and rotation of the object when grabbed
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
+        // Store the initial position of the box when grabbed
+        initialBoxPosition = transform.position;
 
-        // Store the interactor's transform
+        // Calculate the initial grab offset in the box's local space
+        initialGrabOffset = transform.InverseTransformPoint(args.interactorObject.transform.position);
+
+        // Store the interactor's transform (the ray interactor)
         interactorTransform = args.interactorObject.transform;
 
-        // Disable tracking of position and rotation
-        trackPosition = false;
+        // Disable rotation tracking while grabbed
         trackRotation = false;
 
-        Debug.Log("Box grabbed. Initial position: " + initialPosition);
+        Debug.Log("Box grabbed. Initial position: " + initialBoxPosition);
     }
 
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
         base.OnSelectExited(args);
 
-        // Re-enable tracking (optional, if needed for other interactions)
-        trackPosition = true;
-        trackRotation = true;
-
-        // Clear the interactor's transform
+        // Clear the interactor's transform when released
         interactorTransform = null;
+
+        // Re-enable rotation tracking (optional, if needed for other interactions)
+        trackRotation = true;
 
         Debug.Log("Box released.");
     }
@@ -43,29 +43,27 @@ public class RestrictedXRGrabInteractable : XRGrabInteractable
     {
         if (isSelected && interactorTransform != null)
         {
-            // Calculate the interactor's position relative to the box's initial position
-            Vector3 interactorOffset = interactorTransform.position - initialPosition;
+            // Calculate the interactor's position in the box's local space
+            Vector3 localInteractorPosition = transform.InverseTransformPoint(interactorTransform.position);
 
-            // Project the interactor's offset onto the box's local X-axis
-            Vector3 localXAxis = transform.right; // The box's local X-axis
-            float movementAmount = Vector3.Dot(interactorOffset, localXAxis);
+            // Calculate the target X position in the box's local space
+            float targetLocalX = localInteractorPosition.x - initialGrabOffset.x;
 
-            // Increase movement sensitivity (adjust the multiplier as needed)
-            movementAmount *= 2; // This makes the box move more responsively
+            // Restrict movement to the box's local X-axis only
+            Vector3 targetLocalPosition = new Vector3(targetLocalX, 0, 0);
 
-            Debug.Log("Interactor offset: " + interactorOffset + ", Movement amount: " + movementAmount);
-
-            // Move the box along its local X-axis using Transform.Translate
-            transform.Translate(Vector3.right * movementAmount * Time.deltaTime, Space.Self);
+            // Convert the target local position back to world space
+            Vector3 targetWorldPosition = transform.TransformPoint(targetLocalPosition);
 
             // Lock the Y and Z positions to the initial position
-            Vector3 newPosition = transform.position;
-            newPosition.y = initialPosition.y;
-            newPosition.z = initialPosition.z;
-            transform.position = newPosition;
+            targetWorldPosition.y = initialBoxPosition.y;
+            targetWorldPosition.z = initialBoxPosition.z;
 
-            // Lock rotation to the initial rotation
-            transform.rotation = initialRotation;
+            // Move the box to the target position
+            transform.position = targetWorldPosition;
+
+            // Lock rotation to prevent any rotation
+            transform.rotation = Quaternion.identity; // Or use a fixed rotation if needed
         }
     }
 }
