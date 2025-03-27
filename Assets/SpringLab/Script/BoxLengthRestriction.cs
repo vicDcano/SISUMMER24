@@ -16,14 +16,6 @@ public class BoxLengthRestriction : MonoBehaviour
 
     private void Start()
     {
-        // Calculate the platform's edges in world space
-        platformMinX = platform.position.x - (platform.localScale.x / 2);
-        platformMaxX = platform.position.x + (platform.localScale.x / 2);
-
-        // Ensure the box starts within the allowed range
-        Vector3 initialPosition = transform.position;
-        initialPosition.x = Mathf.Clamp(initialPosition.x, platformMinX + movementRange, platformMaxX - movementRange);
-        transform.position = initialPosition;
     }
 
     private void Update()
