@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoxLengthRestriction : MonoBehaviour
@@ -7,30 +5,66 @@ public class BoxLengthRestriction : MonoBehaviour
     // Reference to the platform (assign in the Inspector)
     public Transform platform;
 
-    // Platform boundaries (calculated based on platform's scale and position)
-    private float platformMinX;
-    private float platformMaxX;
+    // How far from center the box can move (as percentage of platform width)
+    [Range(0f, 0.5f)]
+    public float movementRangePercent = 0.25f;
 
-    // Movement range (how far the box can move from the center of the platform)
-    public float movementRange = 0.05f;   // Adjust this to your desired range
+    // Cached platform boundaries
+    private float platformHalfWidth;
+    private float platformCenterX;
+    private float allowedMinX;
+    private float allowedMaxX;
 
     private void Start()
     {
+        if (platform == null)
+        {
+            Debug.LogError("Platform reference not set!");
+            return;
+        }
+
+        // Calculate platform boundaries
+        platformHalfWidth = platform.localScale.x / 2f;
+        platformCenterX = platform.position.x;
+
+        // Calculate allowed movement area (staying in the middle section)
+        allowedMinX = platformCenterX - (platformHalfWidth * movementRangePercent);
+        allowedMaxX = platformCenterX + (platformHalfWidth * movementRangePercent);
     }
 
     private void Update()
     {
-        // Get the current position of the box
+        if (platform == null) return;
+
+        // Get current position
         Vector3 currentPosition = transform.position;
 
-        // Calculate the allowed movement range within the platform
-        float allowedMinX = platformMinX + movementRange;
-        float allowedMaxX = platformMaxX - movementRange;
-
-        // Clamp the box's X position to stay within the allowed range
+        // Clamp X position to stay within allowed range
         currentPosition.x = Mathf.Clamp(currentPosition.x, allowedMinX, allowedMaxX);
 
-        // Update the box's position (only modify the X position)
-        transform.position = new Vector3(currentPosition.x, transform.position.y, transform.position.z);
+        // Apply only the X restriction
+        transform.position = new Vector3(
+            currentPosition.x,
+            transform.position.y,
+            transform.position.z
+        );
+    }
+
+    // Optional: Visualize the allowed area in the editor
+    private void OnDrawGizmosSelected()
+    {
+        if (platform == null) return;
+
+        float halfWidth = platform.localScale.x / 2f;
+        float centerX = platform.position.x;
+        float range = halfWidth * (Application.isPlaying ? movementRangePercent : 0.25f);
+
+        Vector3 minPos = new Vector3(centerX - range, platform.position.y, platform.position.z);
+        Vector3 maxPos = new Vector3(centerX + range, platform.position.y, platform.position.z);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(minPos, maxPos);
+        Gizmos.DrawSphere(minPos, 0.1f);
+        Gizmos.DrawSphere(maxPos, 0.1f);
     }
 }
