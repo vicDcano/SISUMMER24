@@ -1357,9 +1357,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor1: {fileID: 2029916998}
   anchor2: {fileID: 1981692798}
-  springConstant: 10
-  damping: 0.2
-  restLength: 1
+  maxDisplacement: 5
+  movementSpeed: 0.5
+  returnSpeed: 1
 --- !u!23 &325284586
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10360,14 +10360,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7243655721909351022}
-  - component: {fileID: 7243655721909351033}
   - component: {fileID: 258297765373386119}
   - component: {fileID: 6685253999378634138}
   - component: {fileID: 7243655721909351031}
   - component: {fileID: 7243655721909351025}
   - component: {fileID: 7243655721909351028}
   - component: {fileID: 7243655721909351030}
-  - component: {fileID: 7243655721909351032}
   m_Layer: 0
   m_Name: Cube_Grab
   m_TagString: Untagged
@@ -10765,32 +10763,6 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
---- !u!114 &7243655721909351032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6818303077115311026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5da95c88a896c9840aa2694c38005ee5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7243655721909351033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6818303077115311026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad6d4cb821f4a046ac5c8a91cb36497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  platform: {fileID: 1957386944}
-  movementRangePercent: 0.25
 --- !u!4 &7264841677415255283
 Transform:
   m_ObjectHideFlags: 0
@@ -11031,9 +11003,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor1: {fileID: 973691468}
   anchor2: {fileID: 1831788245}
-  springConstant: 10
-  damping: 0.2
-  restLength: 1
+  maxDisplacement: 0.0000005
+  movementSpeed: 0.5
+  returnSpeed: 1
 --- !u!65 &8890533782349691453
 BoxCollider:
   m_ObjectHideFlags: 0
