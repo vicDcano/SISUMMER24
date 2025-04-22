@@ -10585,7 +10585,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -11003,7 +11003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor1: {fileID: 973691468}
   anchor2: {fileID: 1831788245}
-  maxDisplacement: 0.0000005
+  maxDisplacement: 0.005
   movementSpeed: 0.5
   returnSpeed: 1
 --- !u!65 &8890533782349691453
